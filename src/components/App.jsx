@@ -1,14 +1,13 @@
 import './App.css'
 import Notification from "./notification/Notification.jsx";
+import InvestmentProjection from "./investment-projection/InvestmentProjection.jsx";
 
 function App() {
   return (
-    <div>
-      <Notification/>
-      <p className="read-the-docs">
-        React template project with Redux and Chakra UI!!!
-      </p>
-    </div>
+    <>
+      <Notification />
+      <InvestmentProjection />
+    </>
   )
 }
 
