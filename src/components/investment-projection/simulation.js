@@ -1,3 +1,5 @@
+import { TOB_CAPS } from "./constants.js";
+
 export const fmt = (n) =>
   new Intl.NumberFormat("de-BE", {
     style: "currency",
@@ -7,8 +9,27 @@ export const fmt = (n) =>
 
 export const fmtPct = (n) => `${n.toFixed(1)}%`;
 
-export function simulate({ principal, dcaMonths, annualReturn, tobRate, ter, years, monthlyExtra = 0 }) {
-  const monthlyReturn = Math.pow(1 + annualReturn - ter, 1 / 12) - 1;
+export function computeTOB(amount, transactionTax) {
+  const cap = TOB_CAPS[transactionTax] ?? Infinity;
+  return Math.min(amount * transactionTax, cap);
+}
+
+export function simulate({
+  principal,
+  dcaMonths,
+  annualReturn,
+  transactionTax,
+  ongoingCost,
+  years,
+  monthlyExtra = 0,
+  startAge = 35,
+  // Legacy aliases — callers can use either name
+  tobRate,
+  ter,
+}) {
+  const txTax = transactionTax ?? tobRate;
+  const ongoing = ongoingCost ?? ter;
+  const monthlyReturn = Math.pow(1 + annualReturn - ongoing, 1 / 12) - 1;
   const monthlyDCA = principal / dcaMonths;
   const data = [];
   let invested = 0;
@@ -19,13 +40,11 @@ export function simulate({ principal, dcaMonths, annualReturn, tobRate, ter, yea
     const year = m / 12;
     if (m > 0) {
       portfolio *= (1 + monthlyReturn);
-      let contribution = 0;
+      let contribution = monthlyExtra;
       if (m <= dcaMonths) contribution += monthlyDCA;
-      if (m > dcaMonths) contribution += monthlyExtra;
-      else contribution += monthlyExtra;
 
       if (contribution > 0) {
-        const tob = contribution * tobRate;
+        const tob = computeTOB(contribution, txTax);
         totalTOB += tob;
         portfolio += contribution - tob;
         invested += contribution;
@@ -35,7 +54,7 @@ export function simulate({ principal, dcaMonths, annualReturn, tobRate, ter, yea
       const gain = portfolio - invested;
       data.push({
         year: Math.round(year),
-        age: 35 + Math.round(year),
+        age: startAge + Math.round(year),
         portfolio: Math.round(portfolio),
         invested: Math.round(invested),
         gain: Math.round(gain),
@@ -46,7 +65,7 @@ export function simulate({ principal, dcaMonths, annualReturn, tobRate, ter, yea
   return data;
 }
 
-export function computeCGT(gain, exemption = 10000) {
+export function computeCGT(gain, { rate = 0.10, exemption = 10000 } = {}) {
   if (gain <= exemption) return 0;
-  return (gain - exemption) * 0.10;
+  return (gain - exemption) * rate;
 }

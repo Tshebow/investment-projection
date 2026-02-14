@@ -1,0 +1,57 @@
+export const colors = {
+  bg: {
+    primary: "#0f172a",
+    secondary: "#1a1f35",
+    card: "rgba(30,41,59,0.6)",
+    cardLight: "rgba(30,41,59,0.5)",
+    cardSubtle: "rgba(30,41,59,0.4)",
+    overlay: "rgba(71,85,105,0.1)",
+  },
+  border: {
+    subtle: "rgba(71,85,105,0.3)",
+    medium: "#334155",
+    faint: "rgba(71,85,105,0.25)",
+    dimmed: "rgba(71,85,105,0.2)",
+    row: "rgba(51,65,85,0.4)",
+    tab: "#1e293b",
+  },
+  text: {
+    primary: "#e2e8f0",
+    secondary: "#94a3b8",
+    muted: "#64748b",
+    dimmed: "#475569",
+    bright: "#f1f5f9",
+    highlight: "#cbd5e1",
+  },
+  accent: {
+    teal: "#0d9488",
+    tealLight: "#5eead4",
+    tealBg: "rgba(13,148,136,0.15)",
+    tealBorder: "rgba(13,148,136,0.3)",
+    tealGlow: "rgba(13,148,136,0.12)",
+    tealFaint: "rgba(13,148,136,0.04)",
+    tealSubtle: "rgba(13,148,136,0.08)",
+    tealSubtleBorder: "rgba(13,148,136,0.2)",
+    tealGrad: "linear-gradient(135deg, rgba(13,148,136,0.12), rgba(13,148,136,0.04))",
+  },
+  chart: {
+    conservative: "#64748b",
+    moderate: "#0d9488",
+    historical: "#2563eb",
+    invested: "#475569",
+    investedFill: "rgba(71,85,105,0.1)",
+    gridDot: "rgba(71,85,105,0.15)",
+    grid: "rgba(71,85,105,0.2)",
+  },
+  danger: "#ef4444",
+  dangerLight: "#fca5a5",
+  dangerBg: "rgba(239,68,68,0.06)",
+  dangerBorder: "rgba(239,68,68,0.15)",
+  dangerText: "#f87171",
+  warning: "#f59e0b",
+};
+
+export const fonts = {
+  body: "'DM Sans', sans-serif",
+  heading: "'Fraunces', serif",
+};

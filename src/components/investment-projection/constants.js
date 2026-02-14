@@ -4,10 +4,41 @@ export const SCENARIOS = {
   historical: { label: "Historical avg", rate: 0.10, color: "#2563eb" },
 };
 
-export const ETFS = {
-  iwda: { label: "IWDA", tob: 0.0012, ter: 0.002 },
-  vwce: { label: "VWCE", tob: 0.0132, ter: 0.0019 },
-  iwda_emim: { label: "IWDA+EMIM", tob: 0.0012, ter: 0.002 },
+export const INSTRUMENTS = {
+  iwda: {
+    label: "IWDA",
+    type: "etf",
+    costs: { transactionTax: 0.0012, transactionTaxCap: 1300, ongoingCost: 0.002 },
+    tax: { cgtRate: 0.10, cgtExemption: 10000, reynders: false },
+    meta: { isin: "IE00B4L5Y983", holdings: "~1,500" },
+  },
+  vwce: {
+    label: "VWCE",
+    type: "etf",
+    costs: { transactionTax: 0.0132, transactionTaxCap: 4000, ongoingCost: 0.0019 },
+    tax: { cgtRate: 0.10, cgtExemption: 10000, reynders: false },
+    meta: { isin: "IE00BK5BQT80", holdings: "~3,800" },
+  },
+  iwda_emim: {
+    label: "IWDA+EMIM",
+    type: "etf",
+    costs: { transactionTax: 0.0012, transactionTaxCap: 1300, ongoingCost: 0.002 },
+    tax: { cgtRate: 0.10, cgtExemption: 10000, reynders: false },
+    meta: { isin: "IE00B4L5Y983 + IE00BKM4GZ66", holdings: "~1,500 + ~3,200" },
+  },
+};
+
+// Backward compat — filtered view of ETF-type instruments
+export const ETFS = Object.fromEntries(
+  Object.entries(INSTRUMENTS)
+    .filter(([, v]) => v.type === "etf")
+    .map(([k, v]) => [k, { label: v.label, tob: v.costs.transactionTax, ter: v.costs.ongoingCost }])
+);
+
+export const TOB_CAPS = {
+  0.0012: 1300,
+  0.0035: 1600,
+  0.0132: 4000,
 };
 
 export const DCA_OPTIONS = [
