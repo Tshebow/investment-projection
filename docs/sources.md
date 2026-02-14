@@ -26,6 +26,20 @@ All reference links used across the knowledge base, organized by category.
 - [IWDA — iShares Core MSCI World](https://www.ishares.com/nl/particuliere-belegger/nl/producten/251882/ishares-msci-world-ucits-etf-acc-fund) (ISIN: IE00B4L5Y983)
 - [VWCE — Vanguard FTSE All-World](https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating) (ISIN: IE00BK5BQT80)
 - [EMIM — iShares Core MSCI EM IMI](https://www.ishares.com/nl/particuliere-belegger/nl/producten/264659/ishares-msci-emerging-markets-imi-ucits-etf) (ISIN: IE00BKM4GZ66)
+- [CSPX — iShares Core S&P 500](https://www.ishares.com/nl/particuliere-belegger/nl/producten/253743/ishares-core-sp-500-ucits-etf-acc-fund) (ISIN: IE00B5BMR087)
+- [WSML — iShares MSCI World Small Cap](https://www.ishares.com/nl/particuliere-belegger/nl/producten/296576/ishares-msci-world-small-cap-ucits-etf) (ISIN: IE00BF4RFH31)
+- [EQQQ — Invesco EQQQ Nasdaq-100](https://etf.invesco.com/nl/private/en/product/invesco-eqqq-nasdaq-100-ucits-etf-acc/trading-information) (ISIN: IE00BFZXGZ54)
+- [VEUR — Vanguard FTSE Developed Europe](https://www.vanguard.co.uk/professional/product/etf/equity/9526/ftse-developed-europe-ucits-etf-eur-accumulating) (ISIN: IE00BK5BQX27)
+
+## justETF Profiles
+
+- [IWDA on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00B4L5Y983)
+- [VWCE on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00BK5BQT80)
+- [EMIM on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00BKM4GZ66)
+- [CSPX on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00B5BMR087)
+- [WSML on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00BF4RFH31)
+- [EQQQ on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00BFZXGZ54)
+- [VEUR on justETF](https://www.justetf.com/en/etf-profile.html?isin=IE00BK5BQX27)
 
 ## Tax References
 
