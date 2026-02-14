@@ -1,7 +1,6 @@
-# React Template Project
+# Investment Projection
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-Other components are redux state store and Chakra UI. See Counter component as basic example.
+Simple dashboard tool to help planning a personal investment portfolio
 
 
 ## Expanding the ESLint configuration
