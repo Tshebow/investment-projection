@@ -1,8 +1,23 @@
-import { DCA_OPTIONS, ETFS } from "../constants.js";
+import { ETFS, INSTRUMENTS, DCA_OPTIONS } from "../constants.js";
 import { fmt, computeTOB } from "../simulation.js";
 import { colors, fonts } from "../theme.js";
 
-export default function DcaSchedule({ dcaSchedule, dcaMonths, dcaIdx, principal, etfKey, monthlyExtra, etf }) {
+function allocationLabel(etfAllocation) {
+  return etfAllocation.map(a => `${a.pct}% ${ETFS[a.key]?.label || a.key}`).join(" + ");
+}
+
+export default function DcaSchedule({ dcaSchedule, dcaMonths, dcaIdx, principal, etfAllocation, monthlyExtra }) {
+  // Compute blended TOB for the summary
+  const totalDeployTob = etfAllocation.reduce((sum, { key, pct }) => {
+    const etfTob = INSTRUMENTS[key].costs.transactionTax;
+    return sum + computeTOB(principal * pct / 100, etfTob);
+  }, 0);
+
+  const monthlyContribTob = etfAllocation.reduce((sum, { key, pct }) => {
+    const etfTob = INSTRUMENTS[key].costs.transactionTax;
+    return sum + computeTOB(monthlyExtra * pct / 100, etfTob);
+  }, 0);
+
   return (
     <div style={{
       background: colors.bg.cardSubtle,
@@ -14,7 +29,7 @@ export default function DcaSchedule({ dcaSchedule, dcaMonths, dcaIdx, principal,
         DCA Deployment: {fmt(principal)} over {DCA_OPTIONS[dcaIdx].label}
       </div>
       <div style={{ fontSize: 12, color: colors.text.muted, marginBottom: 16 }}>
-        {fmt(Math.round(principal / dcaMonths))}/month into {ETFS[etfKey].label} + {fmt(monthlyExtra)}/month ongoing contribution
+        {fmt(Math.round(principal / dcaMonths))}/month into {allocationLabel(etfAllocation)} + {fmt(monthlyExtra)}/month ongoing contribution
       </div>
 
       <div style={{ overflowX: "auto" }}>
@@ -55,9 +70,9 @@ export default function DcaSchedule({ dcaSchedule, dcaMonths, dcaIdx, principal,
         color: colors.text.secondary,
         lineHeight: 1.6,
       }}>
-        <strong style={{ color: colors.accent.tealLight }}>Total TOB on initial {fmt(principal)} deployment:</strong> {fmt(Math.round(computeTOB(principal, etf.tob)))}
+        <strong style={{ color: colors.accent.tealLight }}>Total TOB on initial {fmt(principal)} deployment:</strong> {fmt(Math.round(totalDeployTob))}
         <br />
-        <strong style={{ color: colors.accent.tealLight }}>Monthly TOB on {fmt(monthlyExtra)} contribution:</strong> {fmt(Math.round(computeTOB(monthlyExtra, etf.tob) * 100) / 100)}/month
+        <strong style={{ color: colors.accent.tealLight }}>Monthly TOB on {fmt(monthlyExtra)} contribution:</strong> {fmt(Math.round(monthlyContribTob * 100) / 100)}/month
         <br />
         <span style={{ fontSize: 12, color: colors.text.dimmed, marginTop: 4, display: "block" }}>
           After the DCA period ends, only your {fmt(monthlyExtra)}/month ongoing contribution continues.

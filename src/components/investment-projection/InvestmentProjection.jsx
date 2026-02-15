@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { SCENARIOS, ETFS, DCA_OPTIONS } from "./constants.js";
-import { simulate, computeCGT, computeTOB, fmt, fmtPct } from "./simulation.js";
+import { SCENARIOS, ETFS, INSTRUMENTS, DCA_OPTIONS } from "./constants.js";
+import { simulate, simulatePortfolio, computeCGT, computeTOB, fmt, fmtPct } from "./simulation.js";
 import { colors, fonts } from "./theme.js";
 import { selectActiveProfile } from "./investmentSlice.js";
 import SummaryCards from "./SummaryCards.jsx";
@@ -14,7 +14,7 @@ import TaxComparison from "./tabs/TaxComparison.jsx";
 export default function InvestmentProjection() {
   const {
     principal, startAge, years, monthlyExtra,
-    dcaIdx, etfKey, inflationAdjusted, inflationRate,
+    dcaIdx, etfAllocation, inflationAdjusted, inflationRate,
   } = useSelector(selectActiveProfile);
 
   const [activeTab, setActiveTab] = useState("growth");
@@ -25,15 +25,14 @@ export default function InvestmentProjection() {
   };
 
   const dcaMonths = DCA_OPTIONS[dcaIdx].months;
-  const etf = ETFS[etfKey];
 
   const results = useMemo(() => {
     const out = {};
     for (const [k, s] of Object.entries(SCENARIOS)) {
-      out[k] = simulate({ principal, dcaMonths, annualReturn: s.rate, tobRate: etf.tob, ter: etf.ter, years, monthlyExtra, startAge });
+      out[k] = simulatePortfolio({ etfAllocation, principal, dcaMonths, annualReturn: s.rate, years, monthlyExtra, startAge });
     }
     return out;
-  }, [principal, dcaMonths, etf, years, monthlyExtra, startAge]);
+  }, [principal, dcaMonths, etfAllocation, years, monthlyExtra, startAge]);
 
   const etfComparison = useMemo(() => {
     const out = {};
@@ -55,13 +54,18 @@ export default function InvestmentProjection() {
     const monthlyDCA = principal / dcaMonths;
     const rows = [];
     let cumulative = 0;
+    // Compute blended TOB across allocation
     for (let m = 1; m <= Math.min(dcaMonths, 36); m++) {
       cumulative += monthlyDCA;
-      const tob = computeTOB(monthlyDCA, etf.tob);
+      let tob = 0;
+      for (const { key, pct } of etfAllocation) {
+        const etfTob = INSTRUMENTS[key].costs.transactionTax;
+        tob += computeTOB(monthlyDCA * pct / 100, etfTob);
+      }
       rows.push({ month: m, amount: Math.round(monthlyDCA), tob: Math.round(tob * 100) / 100, cumulative: Math.round(cumulative), extra: monthlyExtra });
     }
     return rows;
-  }, [principal, dcaMonths, etf, monthlyExtra]);
+  }, [principal, dcaMonths, etfAllocation, monthlyExtra]);
 
   const chartData = useMemo(() => {
     return moderate.map((m, i) => ({
@@ -142,7 +146,7 @@ export default function InvestmentProjection() {
           <GrowthChart {...{ chartData, results, displayPortfolio, deflate, years, startAge, inflationAdjusted, inflationRate }} />
         )}
         {activeTab === "dca" && (
-          <DcaSchedule {...{ dcaSchedule, dcaMonths, dcaIdx, principal, etfKey, monthlyExtra, etf }} />
+          <DcaSchedule {...{ dcaSchedule, dcaMonths, dcaIdx, principal, etfAllocation, monthlyExtra }} />
         )}
         {activeTab === "tax" && (
           <TaxComparison {...{ taxCompData, years, startAge, finalModerateGain: finalModerate.gain }} />

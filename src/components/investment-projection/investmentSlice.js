@@ -3,10 +3,24 @@ import { PROFILE_TEMPLATES } from "./constants.js";
 
 const defaultProfile = PROFILE_TEMPLATES[0].defaults;
 
+function migrateProfile(profile) {
+  if (profile.etfKey && !profile.etfAllocation) {
+    profile.etfAllocation = [{ key: profile.etfKey, pct: 100 }];
+    delete profile.etfKey;
+  }
+  return profile;
+}
+
 function loadFromLocalStorage() {
   try {
     const stored = localStorage.getItem("investment-profiles");
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const state = JSON.parse(stored);
+      for (const id of Object.keys(state.profiles)) {
+        migrateProfile(state.profiles[id]);
+      }
+      return state;
+    }
   } catch { /* ignore */ }
   return null;
 }
@@ -30,7 +44,7 @@ const investmentSlice = createSlice({
     setYears: (state, action) => { state.profiles[state.activeProfileId].years = action.payload; },
     setMonthlyExtra: (state, action) => { state.profiles[state.activeProfileId].monthlyExtra = action.payload; },
     setDcaIdx: (state, action) => { state.profiles[state.activeProfileId].dcaIdx = action.payload; },
-    setEtfKey: (state, action) => { state.profiles[state.activeProfileId].etfKey = action.payload; },
+    setEtfAllocation: (state, action) => { state.profiles[state.activeProfileId].etfAllocation = action.payload; },
     setInflationAdjusted: (state, action) => { state.profiles[state.activeProfileId].inflationAdjusted = action.payload; },
     setInflationRate: (state, action) => { state.profiles[state.activeProfileId].inflationRate = action.payload; },
 
@@ -66,7 +80,7 @@ export const {
   setYears,
   setMonthlyExtra,
   setDcaIdx,
-  setEtfKey,
+  setEtfAllocation,
   setInflationAdjusted,
   setInflationRate,
   createProfile,

@@ -1,4 +1,4 @@
-import { TOB_CAPS } from "./constants.js";
+import { TOB_CAPS, INSTRUMENTS } from "./constants.js";
 
 export const fmt = (n) =>
   new Intl.NumberFormat("de-BE", {
@@ -63,6 +63,39 @@ export function simulate({
     }
   }
   return data;
+}
+
+export function simulatePortfolio({ etfAllocation, principal, dcaMonths, annualReturn, years, monthlyExtra, startAge }) {
+  const perEtf = etfAllocation.map(({ key, pct }) => {
+    const etf = INSTRUMENTS[key];
+    const fraction = pct / 100;
+    return simulate({
+      principal: principal * fraction,
+      dcaMonths,
+      annualReturn,
+      transactionTax: etf.costs.transactionTax,
+      ongoingCost: etf.costs.ongoingCost,
+      years,
+      monthlyExtra: monthlyExtra * fraction,
+      startAge,
+    });
+  });
+
+  // Aggregate: sum across all ETFs per year
+  return perEtf[0].map((_, i) => {
+    const row = { year: perEtf[0][i].year, age: perEtf[0][i].age, portfolio: 0, invested: 0, gain: 0, totalTOB: 0 };
+    for (const etfData of perEtf) {
+      row.portfolio += etfData[i].portfolio;
+      row.invested += etfData[i].invested;
+      row.gain += etfData[i].gain;
+      row.totalTOB += etfData[i].totalTOB;
+    }
+    row.portfolio = Math.round(row.portfolio);
+    row.invested = Math.round(row.invested);
+    row.gain = Math.round(row.gain);
+    row.totalTOB = Math.round(row.totalTOB);
+    return row;
+  });
 }
 
 export function computeCGT(gain, { rate = 0.10, exemption = 10000 } = {}) {
