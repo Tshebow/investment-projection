@@ -41,6 +41,13 @@ export const TOB_CAPS = {
   0.0132: 4000,
 };
 
+export const PROFILE_TEMPLATES = [
+  { key: "personal",    name: "My Portfolio",  defaults: { principal: 70000,  startAge: 35, years: 25, monthlyExtra: 500, dcaIdx: 2, etfKey: "iwda", inflationAdjusted: false, inflationRate: 2.0 }},
+  { key: "newborn",     name: "Newborn Child", defaults: { principal: 5000,   startAge: 0,  years: 60, monthlyExtra: 100, dcaIdx: 2, etfKey: "iwda", inflationAdjusted: false, inflationRate: 2.0 }},
+  { key: "young_adult", name: "Young Adult",   defaults: { principal: 15000,  startAge: 25, years: 35, monthlyExtra: 300, dcaIdx: 2, etfKey: "iwda", inflationAdjusted: false, inflationRate: 2.0 }},
+  { key: "mid_career",  name: "Mid-Career",    defaults: { principal: 100000, startAge: 40, years: 20, monthlyExtra: 800, dcaIdx: 2, etfKey: "iwda", inflationAdjusted: false, inflationRate: 2.0 }},
+];
+
 export const DCA_OPTIONS = [
   { months: 1, label: "Lump sum" },
   { months: 6, label: "6 months" },

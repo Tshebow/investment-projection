@@ -3,8 +3,10 @@ import { useSelector } from "react-redux";
 import { SCENARIOS, ETFS, DCA_OPTIONS } from "./constants.js";
 import { simulate, computeCGT, computeTOB, fmt, fmtPct } from "./simulation.js";
 import { colors, fonts } from "./theme.js";
+import { selectActiveProfile } from "./investmentSlice.js";
 import SummaryCards from "./SummaryCards.jsx";
 import Controls from "./Controls.jsx";
+import ProfileTabs from "./ProfileTabs.jsx";
 import GrowthChart from "./tabs/GrowthChart.jsx";
 import DcaSchedule from "./tabs/DcaSchedule.jsx";
 import TaxComparison from "./tabs/TaxComparison.jsx";
@@ -13,7 +15,7 @@ export default function InvestmentProjection() {
   const {
     principal, startAge, years, monthlyExtra,
     dcaIdx, etfKey, inflationAdjusted, inflationRate,
-  } = useSelector(s => s.investment);
+  } = useSelector(selectActiveProfile);
 
   const [activeTab, setActiveTab] = useState("growth");
 
@@ -100,6 +102,7 @@ export default function InvestmentProjection() {
       }} />
 
       <div style={{ maxWidth: 820, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <ProfileTabs />
         {/* Header */}
         <div style={{ marginBottom: 36 }}>
           <div style={{ fontFamily: fonts.body, fontSize: 11, color: colors.accent.teal, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 8 }}>

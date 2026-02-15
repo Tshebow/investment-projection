@@ -5,4 +5,9 @@ const store = configureStore({
   reducer: rootReducer
 });
 
+store.subscribe(() => {
+  const investment = store.getState().investment;
+  localStorage.setItem("investment-profiles", JSON.stringify(investment));
+});
+
 export default store;

@@ -7,6 +7,7 @@ import { colors } from "./theme.js";
 import {
   setPrincipal, setStartAge, setYears, setMonthlyExtra,
   setDcaIdx, setEtfKey, setInflationAdjusted, setInflationRate,
+  selectActiveProfile,
 } from "./investmentSlice.js";
 
 export default function Controls() {
@@ -14,7 +15,7 @@ export default function Controls() {
   const {
     principal, startAge, years, monthlyExtra,
     dcaIdx, etfKey, inflationAdjusted, inflationRate,
-  } = useSelector(s => s.investment);
+  } = useSelector(selectActiveProfile);
 
   return (
     <div style={{
@@ -28,8 +29,8 @@ export default function Controls() {
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
         <div style={{ flex: 1, minWidth: 220 }}>
           <Slider label="Starting Capital" value={principal} onChange={v => dispatch(setPrincipal(v))} min={1000} max={500000} step={1000} format={v => fmt(v)} />
-          <Slider label="Current Age" value={startAge} onChange={v => dispatch(setStartAge(v))} min={18} max={65} format={v => `${v} years`} />
-          <Slider label="Investment Horizon" value={years} onChange={v => dispatch(setYears(v))} min={5} max={35} format={v => `${v} years (age ${startAge + v})`} />
+          <Slider label="Current Age" value={startAge} onChange={v => dispatch(setStartAge(v))} min={0} max={65} format={v => `${v} years`} />
+          <Slider label="Investment Horizon" value={years} onChange={v => dispatch(setYears(v))} min={5} max={65} format={v => `${v} years (age ${startAge + v})`} />
           <Slider label="Monthly Contribution (after DCA)" value={monthlyExtra} onChange={v => dispatch(setMonthlyExtra(v))} min={0} max={3000} step={50} format={v => fmt(v)} />
 
           {/* Inflation toggle */}
